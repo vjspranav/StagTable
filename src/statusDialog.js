@@ -19,8 +19,10 @@ export default function MaxWidthDialog(props) {
   const username = props.username;
   const userId = props.id;
   const [open, setOpen] = React.useState(false);
-  const [fullWidth, setFullWidth] = React.useState(true);
-  const [maxWidth, setMaxWidth] = React.useState("sm");
+  // const [fullWidth, setFullWidth] = React.useState(true);
+  // const [maxWidth, setMaxWidth] = React.useState("sm");
+  const fullWidth = true;
+  const maxWidth = "sm";
   const [status, setStatus] = React.useState(props.status);
   const [password, setPassword] = React.useState("");
   const [error, setError] = React.useState(false);
@@ -56,12 +58,12 @@ export default function MaxWidthDialog(props) {
     );
   };
 
-  const handleFullWidthChange = (event) => {
-    setFullWidth(event.target.checked);
-  };
+  // const handleFullWidthChange = (event) => {
+  //   setFullWidth(event.target.checked);
+  // };
 
   const handlePasswordInput = (event) => {
-    if (event.keyCode == 13) {
+    if (event.keyCode === 13) {
       checkPassword();
     } else {
       setPassword(event.target.value);
@@ -71,11 +73,11 @@ export default function MaxWidthDialog(props) {
   const checkPassword = () => {
     const data = { pass: password, id: userId, status: status };
     console.log(data);
-    if (status == "Accepted") {
+    if (status === "Accepted") {
       axios
         .post("https://api.stag-os.org/maintainers/createPR", data)
         .then((res) => {
-          if (res.data.status != 200) {
+          if (res.data.status !== 200) {
             setError(true);
             setErrorMsg(res.data.message);
             setStatus(defaultStatus);
@@ -84,7 +86,7 @@ export default function MaxWidthDialog(props) {
               .post("https://api.stag-os.org/maintainers/updateStatus", data)
               .then((res) => {
                 // console.log(res.data);
-                if (res.data.status != 200) {
+                if (res.data.status !== 200) {
                   setError(true);
                   setErrorMsg(res.data.message);
                   setStatus(defaultStatus);
@@ -106,7 +108,7 @@ export default function MaxWidthDialog(props) {
         .post("https://api.stag-os.org/maintainers/updateStatus", data)
         .then((res) => {
           // console.log(res.data);
-          if (res.data.status != 200) {
+          if (res.data.status !== 200) {
             setError(true);
             setErrorMsg(res.data.message);
             setStatus(defaultStatus);
@@ -129,12 +131,12 @@ export default function MaxWidthDialog(props) {
   return (
     <React.Fragment>
       <Button
-        variant={defaultStatus == "Accepted" ? "contained" : "outlined"}
+        variant={defaultStatus === "Accepted" ? "contained" : "outlined"}
         onClick={handleClickOpen}
         color={
-          defaultStatus == "Accepted"
+          defaultStatus === "Accepted"
             ? "success"
-            : defaultStatus == "Rejected"
+            : defaultStatus === "Rejected"
             ? "error"
             : "secondary"
         }
@@ -153,11 +155,11 @@ export default function MaxWidthDialog(props) {
             style={{
               display: "inline",
               color:
-                defaultStatus == "Accepted"
+                defaultStatus === "Accepted"
                   ? "green"
-                  : defaultStatus == "Rejected"
+                  : defaultStatus === "Rejected"
                   ? "red"
-                  : defaultStatus == "Applied"
+                  : defaultStatus === "Applied"
                   ? "orange"
                   : "violet",
             }}
