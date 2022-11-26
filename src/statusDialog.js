@@ -28,6 +28,7 @@ export default function MaxWidthDialog(props) {
   const [error, setError] = React.useState(false);
   const [errorMsg, setErrorMsg] = React.useState("Enter Password");
   const [defaultStatus, setdefaultStatus] = React.useState(props.status);
+  const [review, setReview] = React.useState("");
 
   const style = {
     display: "flex",
@@ -70,8 +71,12 @@ export default function MaxWidthDialog(props) {
     }
   };
 
+  const handleReviewInput = (event) => {
+    setReview(event.target.value);
+  };
+
   const checkPassword = () => {
-    const data = { pass: password, id: userId, status: status };
+    const data = { pass: password, id: userId, status: status, review: review };
     console.log(data);
     if (status === "Accepted") {
       axios
@@ -219,6 +224,19 @@ export default function MaxWidthDialog(props) {
             ) : (
               <Alert severity="success">{errorMsg}</Alert>
             )}
+            {/* Add a field for review */}
+            <TextField
+              autoFocus
+              margin="dense"
+              id="review"
+              label="Review"
+              type="text"
+              fullWidth
+              variant="standard"
+              value={review}
+              onChange={handleReviewInput}
+              onKeyDown={handleReviewInput}
+            />
             <DialogActions
               sx={{
                 display: "flex",

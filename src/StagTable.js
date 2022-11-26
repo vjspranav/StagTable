@@ -8,6 +8,10 @@ import {
   Paper,
   Button,
   TableRow,
+  Select,
+  AppBar,
+  Toolbar,
+  Typography,
 } from "@mui/material";
 import { tableCellClasses } from "@mui/material/TableCell";
 import { styled } from "@mui/material/styles";
@@ -48,10 +52,11 @@ function StagTable() {
   const classes = useStyles();
   const [users, setUsers] = useState([]);
   const [loadUsers, setLoadUsers] = useState(false);
+  const [version, setVersion] = useState("13");
 
   useEffect(() => {
     axios
-      .get("https://api.stag-os.org/maintainers/all")
+      .get(`https://api.stag-os.org/${version}/maintainers/all`)
       .then((res) => {
         // console.log(res.data.data);
         setUsers(res.data.data);
@@ -59,10 +64,54 @@ function StagTable() {
       .catch((err) => {
         // console.log(err);
       });
-  }, [loadUsers]);
+  }, [loadUsers, version]);
 
   return (
     <>
+      {/* Add a AppBar */}
+      <AppBar
+        position="static"
+        style={{
+          height: "50px",
+          margin: "0px",
+        }}
+      >
+        <Toolbar>
+          <Typography
+            style={{
+              flexGrow: 1,
+            }}
+            variant="h6"
+          >
+            StagOS Maintainer Applications
+          </Typography>
+          {/* Add Selct with Label */}
+          <Typography
+            style={{
+              marginRight: "10px",
+            }}
+            variant="h6"
+          >
+            Select Version:
+          </Typography>
+          <Select
+            native
+            value={version}
+            onChange={(e) => {
+              setVersion(e.target.value);
+            }}
+            style={{
+              marginRight: "10px",
+              marginTop: "0",
+              paddingTop: "0",
+              height: "30px",
+            }}
+          >
+            <option value="13">13</option>
+            <option value="old">12</option>
+          </Select>
+        </Toolbar>
+      </AppBar>
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="a dense table">
           <TableHead>
