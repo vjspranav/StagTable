@@ -5,11 +5,10 @@ object-assign
 */
 
 /**
- * A better abstraction over CSS.
+ * @license lucide-react v0.396.0 - ISC
  *
- * @copyright Oleg Isonen (Slobodskoi) / Isonen 2014-present
- * @website https://github.com/cssinjs/jss
- * @license MIT
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
  */
 
 /** @license MUI v5.3.0
