@@ -1,166 +1,196 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
-  TableContainer,
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
-  Paper,
-  Button,
   TableRow,
-  Select,
+  Paper,
   AppBar,
   Toolbar,
   Typography,
+  Select,
+  MenuItem,
+  Button,
+  Card,
+  CardContent,
 } from "@mui/material";
-import { tableCellClasses } from "@mui/material/TableCell";
 import { styled } from "@mui/material/styles";
-import { makeStyles } from "@mui/styles";
-import { useState, useEffect } from "react";
+import { Waves, RefreshCcw as Refresh } from "lucide-react";
 import axios from "axios";
-// import BasicModal from './popup';
-import MaxWidthDialog from "./statusDialog";
+import MaxWidthDialog from "./statusDialog"; // Assuming this is the correct import for your status popup
 
-const useStyles = makeStyles({
-  table: {
-    minWidth: 100,
+const OceanicAppBar = styled(AppBar)(({ theme }) => ({
+  background: theme.palette.primary.main,
+  boxShadow: theme.shadows[3],
+}));
+
+const OceanicCard = styled(Card)(({ theme }) => ({
+  margin: theme.spacing(3),
+  borderRadius: theme.shape.borderRadius,
+  boxShadow: theme.shadows[3],
+  "&:hover": {
+    boxShadow: theme.shadows[6],
   },
-});
+}));
+
+const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
+  maxHeight: "calc(100vh - 200px)",
+  background: "linear-gradient(linear, #caf0f8 90%, #90e0ef 10%)",
+  "&::-webkit-scrollbar": {
+    width: "0.4em",
+  },
+  "&::-webkit-scrollbar-track": {
+    boxShadow: "inset 0 0 6px rgba(0,0,0,0.00)",
+    webkitBoxShadow: "inset 0 0 6px rgba(0,0,0,0.00)",
+  },
+  "&::-webkit-scrollbar-thumb": {
+    backgroundColor: "rgba(0,0,0,.1)",
+    outline: "1px solid slategrey",
+    borderRadius: "4px",
+  },
+}));
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
+  "&.MuiTableCell-head": {
+    // backgroundColor: "#023e8a",
+    backgroundColor: theme.palette.primary.dark,
     color: theme.palette.common.white,
-    fontSize: 18,
+    fontWeight: "bold",
   },
-  [`&.${tableCellClasses.body}`]: {
+  "&.MuiTableCell-body": {
     fontSize: 14,
   },
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  // "&:nth-of-type(odd)": {
+  //   backgroundColor: theme.palette.action.hover,
+  // },
+  // "&:last-child td, &:last-child th": {
+  //   border: 0,
+  // },
+  // transition: "background-color 0.3s",
+  // "&:hover": {
+  //   backgroundColor: theme.palette.action.selected,
+  // },
   "&:nth-of-type(odd)": {
-    backgroundColor: theme.palette.action.hover,
+    backgroundColor: "rgba(144, 224, 239, 0.3)",
   },
-  // hide last border
   "&:last-child td, &:last-child th": {
     border: 0,
   },
+  transition: "background-color 0.3s",
+  "&:hover": {
+    backgroundColor: "rgba(144, 224, 239, 0.5) !important",
+  },
 }));
 
-function StagTable() {
-  const classes = useStyles();
+const RefreshButton = styled(Button)(({ theme }) => ({
+  margin: theme.spacing(2),
+  background: "linear-gradient(45deg, #023e8a 30%, #0077b6 90%)",
+  border: 0,
+  borderRadius: 3,
+  boxShadow: "0 3px 5px 2px rgba(33, 150, 243, .3)",
+  color: "white",
+  height: 48,
+  padding: "0 30px",
+  "&:hover": {
+    background: "linear-gradient(45deg, #0077b6 30%, #023e8a 90%)",
+  },
+}));
+
+function MaterialisticOceanicTable() {
   const [users, setUsers] = useState([]);
-  const [loadUsers, setLoadUsers] = useState(false);
   const [version, setVersion] = useState("13");
 
   useEffect(() => {
-    axios
-      .get(`https://api.stag-os.org/${version}/maintainers/all`)
-      .then((res) => {
-        // console.log(res.data.data);
-        setUsers(res.data.data);
-      })
-      .catch((err) => {
-        // console.log(err);
-      });
-  }, [loadUsers, version]);
+    fetchUsers();
+  }, [version]);
+
+  const fetchUsers = async () => {
+    try {
+      const res = await axios.get(
+        `https://api.stag-os.org/${version}/maintainers/all`
+      );
+      setUsers(res.data.data);
+    } catch (err) {
+      console.error("Error fetching users:", err);
+    }
+  };
 
   return (
     <>
-      {/* Add a AppBar */}
-      <AppBar
-        position="static"
-        style={{
-          height: "50px",
-          margin: "0px",
-        }}
-      >
+      <OceanicAppBar position="static">
         <Toolbar>
           <Typography
-            style={{
-              flexGrow: 1,
-            }}
             variant="h6"
+            style={{ flexGrow: 1, display: "flex", alignItems: "center" }}
           >
+            <Waves size={24} style={{ marginRight: "10px" }} />
             StagOS Maintainer Applications
           </Typography>
-          {/* Add Selct with Label */}
-          <Typography
-            style={{
-              marginRight: "10px",
-            }}
-            variant="h6"
-          >
-            Select Version:
+          <Typography variant="subtitle1" style={{ marginRight: "10px" }}>
+            Version:
           </Typography>
           <Select
-            native
             value={version}
-            onChange={(e) => {
-              setVersion(e.target.value);
-            }}
-            style={{
-              marginRight: "10px",
-              marginTop: "0",
-              paddingTop: "0",
-              height: "30px",
-            }}
+            onChange={(e) => setVersion(e.target.value)}
+            style={{ backgroundColor: "white", height: "40px" }}
           >
-            <option value="13">13</option>
-            <option value="old">12</option>
+            <MenuItem value="14">14</MenuItem>
+            <MenuItem value="13">13</MenuItem>
+            <MenuItem value="old">12</MenuItem>
           </Select>
         </Toolbar>
-      </AppBar>
-      <TableContainer component={Paper}>
-        <Table className={classes.table} aria-label="a dense table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell align="center">User Name</StyledTableCell>
-              <StyledTableCell align="center">
-                Telegram User Name
-              </StyledTableCell>
-              <StyledTableCell align="center">Github Id</StyledTableCell>
-              <StyledTableCell align="center">Device Name</StyledTableCell>
-              <StyledTableCell align="center">Device Code</StyledTableCell>
-              <StyledTableCell align="center">Email</StyledTableCell>
-              <StyledTableCell align="center">Status</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {users.map((user) => (
-              <StyledTableRow key={user._id}>
-                <TableCell align="center">{user.name}</TableCell>
-                <TableCell align="center">{user.tg_username}</TableCell>
-                <TableCell align="center">{user.github_username}</TableCell>
-                <TableCell align="center">{user.device_name}</TableCell>
-                <TableCell align="center">{user.device_codename}</TableCell>
-                <TableCell align="center" scope="row">
-                  {user.email}
-                </TableCell>
-                <TableCell align="center">
-                  <MaxWidthDialog
-                    status={user.status}
-                    username={user.name}
-                    id={user._id}
-                    user={user}
-                  />
-                </TableCell>
-              </StyledTableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <Button
-          onClick={() => {
-            setLoadUsers(!loadUsers);
-          }}
-          style={{ display: "flex", margin: "auto" }}
-        >
-          Refresh Users List
-        </Button>
-      </TableContainer>
+      </OceanicAppBar>
+      <OceanicCard>
+        <CardContent>
+          <StyledTableContainer component={Paper}>
+            <Table stickyHeader aria-label="customized table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>User Name</StyledTableCell>
+                  <StyledTableCell>Telegram User Name</StyledTableCell>
+                  <StyledTableCell>Github Id</StyledTableCell>
+                  <StyledTableCell>Device Name</StyledTableCell>
+                  <StyledTableCell>Device Code</StyledTableCell>
+                  <StyledTableCell>Email</StyledTableCell>
+                  <StyledTableCell>Status</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {users.map((user) => (
+                  <StyledTableRow key={user._id}>
+                    <StyledTableCell component="th" scope="row">
+                      {user.name}
+                    </StyledTableCell>
+                    <StyledTableCell>{user.tg_username}</StyledTableCell>
+                    <StyledTableCell>{user.github_username}</StyledTableCell>
+                    <StyledTableCell>{user.device_name}</StyledTableCell>
+                    <StyledTableCell>{user.device_codename}</StyledTableCell>
+                    <StyledTableCell>{user.email}</StyledTableCell>
+                    <StyledTableCell>
+                      <MaxWidthDialog
+                        status={user.status}
+                        username={user.name}
+                        id={user._id}
+                        user={user}
+                      />
+                    </StyledTableCell>
+                  </StyledTableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </StyledTableContainer>
+          <RefreshButton onClick={fetchUsers} startIcon={<Refresh />}>
+            Refresh Users List
+          </RefreshButton>
+        </CardContent>
+      </OceanicCard>
     </>
   );
 }
 
-export default StagTable;
+export default MaterialisticOceanicTable;
