@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Table,
   TableBody,
@@ -105,11 +105,7 @@ function MaterialisticOceanicTable() {
   const [users, setUsers] = useState([]);
   const [version, setVersion] = useState("13");
 
-  useEffect(() => {
-    fetchUsers();
-  }, [version]);
-
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
       const res = await axios.get(
         `https://api.stag-os.org/${version}/maintainers/all`
@@ -118,7 +114,11 @@ function MaterialisticOceanicTable() {
     } catch (err) {
       console.error("Error fetching users:", err);
     }
-  };
+  }, [version]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
 
   return (
     <>
